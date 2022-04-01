@@ -26,7 +26,7 @@ def dense_flow(f1, f2):
     # Converts HSV to RGB (BGR) color representation
     rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
     # Opens a new window and displays the output frame
-    cv2.imshow("dense optical flow", rgb)
+    # cv2.imshow("dense optical flow", rgb)
     return rgb
 
 
@@ -34,5 +34,8 @@ if __name__ == '__main__':
     f1 = cv2.imread('ezgif-frame-012.jpg')
     f2 = cv2.imread('ezgif-frame-013.jpg')
 
-    dense_flow(f1, f2)
-
+    res = dense_flow(f1, f2)
+    print(res.shape)
+    plt.imshow(res)
+    plt.show()
+    plt.imsave('dense_flow.png', res)
