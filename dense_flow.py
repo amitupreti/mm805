@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 def dense_flow(f1, f2):
     """
-
+    returns the dense optical flow between two BGR images
     :param f1: cv2 BGR image frame 1
     :param f2: cv2 BGR image frame 2
     :return: rgb dense flow image
