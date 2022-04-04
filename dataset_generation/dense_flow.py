@@ -30,12 +30,12 @@ def dense_flow(f1, f2):
     return rgb
 
 
-if __name__ == '__main__':
-    f1 = cv2.imread('ezgif-frame-012.jpg')
-    f2 = cv2.imread('ezgif-frame-013.jpg')
-
-    res = dense_flow(f1, f2)
-    print(res.shape)
-    plt.imshow(res)
-    plt.show()
-    plt.imsave('dense_flow.png', res)
+# if __name__ == '__main__':
+#     f1 = cv2.imread('ezgif-frame-012.jpg')
+#     f2 = cv2.imread('ezgif-frame-013.jpg')
+#
+#     res = dense_flow(f1, f2)
+#     print(res.shape)
+#     plt.imshow(res)
+#     plt.show()
+#     plt.imsave('dense_flow.png', res)
