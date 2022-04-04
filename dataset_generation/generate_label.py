@@ -6,8 +6,8 @@ import pathlib
 from dense_flow import dense_flow
 
 DENSE_PATH = './optical_flow/'
-MASK_PATH = './dataset/mask/'
-pathlib.Path(MASK_PATH).mkdir(parents=True, exist_ok=True)
+LABEL_PATH = './dataset/lab/'
+pathlib.Path(LABEL_PATH).mkdir(parents=True, exist_ok=True)
 
 if __name__ == '__main__':
     # read all images in optical flow folder and then generate mask.
@@ -19,10 +19,13 @@ if __name__ == '__main__':
     for i, file in enumerate(os.listdir(DENSE_PATH)):
         if file.endswith(".png"):
             img = plt.imread(os.path.join(DENSE_PATH, file))
-            mask = np.zeros_like(img[:, :, 0])
+
+            label = np.zeros_like(img[:, :, 0])
             # breakpoint()
-            mask[:,:] = 255
+            # TODO After iris confirms the logic for label generation, implement here
+            #it has to be a binary image
+            # label[:,:] = 255
 
             # save mask
             mask_name = file.split('.')[0] + '.gif'
-            plt.imsave(os.path.join(MASK_PATH, mask_name), mask, cmap='binary')
+            plt.imsave(os.path.join(LABEL_PATH, mask_name), label, cmap='binary')
