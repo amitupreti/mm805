@@ -16,7 +16,7 @@ except FileExistsError:
 if __name__ == '__main__':
     counter = 0
     files = os.listdir(FRAMES_PATH)
-    files = sorted(files)
+    files.sort(key = lambda x: int(x.split('.')[0]))
 
     # breakpoint()
     # files = files[3977:]  # doing small for test. Will regenerate the whole later
@@ -40,6 +40,7 @@ if __name__ == '__main__':
 
         filename = f'{DENSE_PATH}dense_flow{counter}__source_{name1__no_ext}_{name2__no_ext}.png'
         print(f'Processing Frame1 {frame1} and Frame2 {frame2} --> {filename}')
+        # breakpoint()
         plt.imsave(filename, res)
         gc.collect()
         counter += 1
