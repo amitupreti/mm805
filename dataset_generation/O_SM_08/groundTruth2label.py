@@ -5,10 +5,8 @@ import gc
 from dense_flow import dense_flow
 from time import sleep
 
-FRAMES_PATH = './O_SM_08/'
-# FRAMES_PATH = './O_SM_08-GT/'
-DENSE_PATH = './optical_flow/'
-# DENSE_PATH = './optical_flow1/'
+FRAMES_PATH = './O_SM_08-GT/'
+DENSE_PATH = './optical_flow1/'
 
 try:
     os.mkdir(DENSE_PATH)
@@ -18,8 +16,7 @@ except FileExistsError:
 if __name__ == '__main__':
     counter = 0
     files = os.listdir(FRAMES_PATH)
-    files.sort(key = lambda x: int(x.split('.')[0]))
-    # files.sort(key=lambda x: int(x.split('.')[0].split('_')[-1]))
+    files.sort(key=lambda x: int(x.split('.')[0].split('_')[-1]))
 
     # breakpoint()
     # files = files[3977:]  # doing small for test. Will regenerate the whole later
@@ -29,6 +26,11 @@ if __name__ == '__main__':
         frame1 = f'{FRAMES_PATH}{name1}'
         frame2 = f'{FRAMES_PATH}{name2}'
 
+        img1 = plt.imread(frame1)
+        img2 = plt.imread(frame2)
+        combined = np.concatenate((img1, img2), axis=1)
+        breakpoint()
+        plt.imshow(img1+img2)
         f1 = cv2.imread(frame1)
         f2 = cv2.imread(frame2)
         try:
