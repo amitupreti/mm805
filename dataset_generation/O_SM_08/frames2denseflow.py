@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import gc
 from dense_flow import dense_flow
 from time import sleep
+from PIL import Image
 
 FRAMES_PATH = './O_SM_08/'
 # FRAMES_PATH = './O_SM_08-GT/'
@@ -41,10 +42,11 @@ if __name__ == '__main__':
         name1__no_ext = name1.split('.')[0]
         name2__no_ext = name2.split('.')[0]
 
-        filename = f'{DENSE_PATH}dense_flow{counter}__source_{name1__no_ext}_{name2__no_ext}.png'
+        filename = f'{DENSE_PATH}{counter}__source_{name1__no_ext}_{name2__no_ext}.tif'
         print(f'Processing Frame1 {frame1} and Frame2 {frame2} --> {filename}')
         # breakpoint()
-        plt.imsave(filename, res)
+        # plt.imsave(filename, res)
+        Image.fromarray(res).save(filename)
         gc.collect()
         counter += 1
         sleep(0.01)

@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pathlib
 from dense_flow import dense_flow
+from PIL import Image
 
 DENSE_PATH = './optical_flow/'
 MASK_PATH = './masks/'
@@ -17,7 +18,7 @@ if __name__ == '__main__':
     # mask format is .gif(following chengui's format)
 
     for i, file in enumerate(os.listdir(DENSE_PATH)):
-        if file.endswith(".png"):
+        if file.endswith(".tif"):
             img = plt.imread(os.path.join(DENSE_PATH, file))
             mask = np.zeros_like(img[:, :, 0])
             # breakpoint()
@@ -26,4 +27,7 @@ if __name__ == '__main__':
             # save mask
             mask_name = file.split('.')[0] + '.gif'
             print(mask_name)
+            # breakpoint()
+            # Image.fromarray(mask).save((os.path.join(MASK_PATH, mask_name)))
             plt.imsave(os.path.join(MASK_PATH, mask_name), mask, cmap='binary')
+

@@ -22,19 +22,22 @@ if __name__ == '__main__':
 
     for i, file in enumerate(os.listdir(DENSE_PATH)):
         if file.endswith(".png"):
-            file = 'O_SM_08-GT_260.png'
+            file = 'GT_260.png'
             img = plt.imread(os.path.join(DENSE_PATH, file))
             # https://stackoverflow.com/questions/40449781/convert-image-np-array-to-binary-image
 
             im_gray = np.array(Image.open(os.path.join(DENSE_PATH, file)).convert('L'))
 
-            im_bin = (im_gray < thresh) * maxval
+            im_bin = (im_gray > thresh) * maxval
             # plt.imshow(im_bin, cmap='gray')
             # plt.show()
-            breakpoint()
+
 
 
             # save mask
             mask_name = file.split('.')[0] + '.gif'
-            Image.fromarray(np.uint8(im_bin)).save(os.path.join(LABEL_PATH, mask_name))
+
+            plt.imsave(os.path.join(LABEL_PATH, mask_name), im_bin, cmap='gray')
+            # breakpoint()
+            # Image.fromarray(np.uint8(im_bin)).save(os.path.join(LABEL_PATH, mask_name))
 
