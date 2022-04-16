@@ -1057,7 +1057,7 @@ def main():
     
 
     path_im = '../data/training/images'
-    path_lb = '../data/training/1st_manual'
+    path_lb = '../data/training/labels'
     path_mk = '../data/training/mask'
 
 
@@ -1194,7 +1194,7 @@ def main():
 
     print("starting evaluation ---------------------------------------------------------------")
     path_im = '../data/test/images'
-    path_lb = '../data/test/1st_manual'
+    path_lb = '../data/test/labels'
     path_mk = '../data/test/mask'
 
 
