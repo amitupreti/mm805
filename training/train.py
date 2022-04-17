@@ -46,35 +46,6 @@ def loadFiles_plus(path_im, keyword = ""):
     return re_fs, re_fullfs
 
 
-def img2patches(img, radius):
-    re_data = []
-
-    row, column, byte = img.shape
-
-    for r in range(radius, row - radius):
-        for c in range(radius, column - radius):
-#            print("i, j", i, j)
-            patches = img[r - radius:r + radius, c - radius:c + radius, :]
-
-            re_data.append(patches)
-
-            print("r, c = ", r, c)
-
-#             showim = img - img + img
-#             showim[r - radius:r + radius, c - radius:c + radius, 0] = 255
-#             showim[r - radius:r + radius, c - radius:c + radius, 1] = 0
-#             showim[r - radius:r + radius, c - radius:c + radius, 2] = 0
-#
-#
-#             print("r, c = ", r, c)
-#             plt.subplot(1, 2, 1)
-#             plt.imshow(patches)
-#             plt.subplot(1, 2, 2)
-#             plt.imshow(showim)
-#             plt.pause(0.01)
-
-    return re_data
-
 
 # class Net(nn.Module):
 #     def __init__(self):
@@ -213,122 +184,8 @@ class FakeDataset(torch.utils.data.Dataset):
 
 
 
-def img2patches_mask(img, lab, radius, msk):
-    re_imgs = []
-    re_labs = []
-
-    row_im, column_im, byte_im = img.shape
-
-    row_mk, column_mk = msk.shape
-    row_lb, column_lb = lab.shape
-
-    for r in range(radius, row_im - radius):
-        for c in range(radius, column_im - radius):
-            if msk[r, c] == 255 :
-                patch_img = img[r - radius:r + radius + 1, c - radius:c + radius + 1, :]
-                patch_msk = msk[r - radius:r + radius + 1, c - radius:c + radius + 1]
-#                patch_labmsk = lab[r - radius:r + radius + 1, c - radius:c + radius + 1]
-                patch_lab = lab[r, c]
-
-                center_value = img[r, c, :]
-
-                indices = patch_msk == 255
-                img_vals = patch_img[indices, :]
-                nums, byte = img_vals.shape
-                np.random.shuffle(img_vals)
-
-                img_vals = np.pad(img_vals, ((0,   (2*radius + 1)**2 - nums  ), (0,0)), 'symmetric')
-                patch_fake = np.reshape(img_vals, ((2*radius + 1), (2*radius + 1), byte  ) )
-
-                patch_sub = patch_fake - center_value
-
-                re_imgs.append(patch_sub)
-                re_labs.append(patch_lab)
-
-        print("r = ", r)
 
 
-    re_imgs = np.asarray(re_imgs)
-    re_labs = np.asarray(re_labs)
-
-    re_imgs = re_imgs.transpose(0, 3, 1, 2)
-    re_imgs = re_imgs.dot(1.0/255.0)
-    re_labs = re_labs.dot(1.0/255.0)
-    re_labs.astype(int)
-
-    return re_imgs, re_labs
-
-
-def img2patches_plus(img, lab, radius, msk):
-    re_imgs = []
-    re_labs = []
-
-    row_im, column_im, byte_im = img.shape
-
-    row_mk, column_mk = msk.shape
-    row_lb, column_lb = lab.shape
-
-    for r in range(radius, row_im - radius):
-        for c in range(radius, column_im - radius):
-            if msk[r, c] == 255 :
-                patch_img = img[r - radius:r + radius + 1, c - radius:c + radius + 1, :]
-                patch_msk = msk[r - radius:r + radius + 1, c - radius:c + radius + 1]
-#                patch_labmsk = lab[r - radius:r + radius + 1, c - radius:c + radius + 1]
-                patch_lab = lab[r, c]
-
-                center_value = img[r, c, :]
-
-#                judge_idx = patch_msk == 0
-#                flag = np.sum(judge_idx)
-                flag = np.sum(patch_msk == 0)
-
-                if flag != 0:
-                    indices = patch_msk == 255
-                    img_vals = patch_img[indices, :]
-                    nums, byte = img_vals.shape
-                    np.random.shuffle(img_vals)
-
-                    img_vals = np.pad(img_vals, ((0,   (2*radius + 1)**2 - nums  ), (0,0)), 'symmetric')
-                    patch_fake = np.reshape(img_vals, ((2*radius + 1), (2*radius + 1), byte  ) )
-
-                else:
-                    indices = patch_msk == 255
-                    img_vals = patch_img[indices, :]
-
-
-                    nums, byte = img_vals.shape
-                    np.random.shuffle(img_vals)
-
-                    patch_fake = np.reshape(img_vals, patch_img.shape )
-
-
-                patch_sub = patch_fake - center_value
-
-                re_imgs.append(patch_sub)
-                re_labs.append(patch_lab)
-
-
-    re_imgs = np.asarray(re_imgs)
-    re_labs = np.asarray(re_labs)
-
-    re_imgs = re_imgs.transpose(0, 3, 1, 2)
-    re_imgs = re_imgs.dot(1.0/255.0)
-    re_labs = re_labs.dot(1.0/255.0)
-    re_labs.astype(int)
-
-    return re_imgs, re_labs
-
-
-
-def img2patches_multi(img, lab, msk, radius_in, radius_out):
-
-    for i in range(len(radius_out)):
-        print(i)
-
-
-
-
-    return img
 
 
 
@@ -369,38 +226,6 @@ def random_pad(vals, tar_nums):
     return re_vals
 
 #    return tar_idx
-# def img2patches_files(fs_im, fs_lb, fs_mk, radius):
-#
-#     im = imageio.imread(fs_im[0])
-#     lb = imageio.imread(fs_lb[0])
-#     mk = imageio.imread(fs_mk[0])
-#     mk = mask_extend(mk, 5)
-#
-#     adv_im = np.pad(im, ((radius, radius), (radius, radius), (0,0)), 'edge')
-#     adv_lb = np.pad(lb, ((radius, radius), (radius, radius)), 'edge')
-#     adv_mk = np.pad(mk, ((radius, radius), (radius, radius)), 'edge')
-#
-#
-#     re_imgs, re_labs = img2patches_fast(adv_im, adv_lb, radius, adv_mk)
-#
-#
-#     for i in range(1, len(fs_im)):
-#         im = imageio.imread(fs_im[i])
-#         lb = imageio.imread(fs_lb[i])
-#         mk = imageio.imread(fs_mk[i])
-#         mk = mask_extend(mk, 5)
-#
-#         adv_im = np.pad(im, ((radius, radius), (radius, radius), (0,0)), 'edge')
-#         adv_lb = np.pad(lb, ((radius, radius), (radius, radius)), 'edge')
-#         adv_mk = np.pad(mk, ((radius, radius), (radius, radius)), 'edge')
-#
-#
-#         imgs, labs = img2patches_fast(adv_im, adv_lb, radius, adv_mk)
-#
-#         re_imgs = np.concatenate((re_imgs, imgs), axis=0)
-#         re_labs = np.concatenate((re_labs, labs), axis=0)
-#
-#     return re_imgs, re_labs
 
 
 def img2patches_in_out(img, lab, msk, radius_in, radius_out):
@@ -409,11 +234,8 @@ def img2patches_in_out(img, lab, msk, radius_in, radius_out):
 
     img = torch.tensor(img, dtype=torch.float)
     lab = torch.tensor(lab, dtype=torch.float)
-
-    lab = lab[:,:,0]
     msk = torch.tensor(msk, dtype=torch.float)
 
-    
     row_img_src, column_img_src, byte_img_src = img.shape
 
     img = F.pad(img, ((0, 0, radius_out, radius_out, radius_out, radius_out) ), 'constant')
@@ -467,7 +289,6 @@ def img2patches_in_out(img, lab, msk, radius_in, radius_out):
 
 
                 re_imgs[count, :, :, :] = patch_sub
-                
                 re_labs[count] = patch_lab
 
                 count = count + 1
@@ -547,30 +368,6 @@ def img2patches_fast(img, lab, radius, msk):
 
 
 
-def img2patches_files_pytorch(fs_im, fs_lb, fs_mk, radius_in, radius_out):
-
-    im = imageio.imread(fs_im[0])
-    lb = imageio.imread(fs_lb[0])
-    mk = imageio.imread(fs_mk[0])
-    mk = mask_extend(mk, 5)
-
-
-    re_imgs, re_labs = img2patches_in_out(im, lb, mk, radius_in, radius_out)
-
-    for i in range(1, len(fs_im)):
-        im = imageio.imread(fs_im[i])
-        lb = imageio.imread(fs_lb[i])
-        mk = imageio.imread(fs_mk[i])
-        mk = mask_extend(mk, 5)
-
-        imgs, labs = img2patches_in_out(im, lb, mk, radius_in, radius_out)
-
-        re_imgs = torch.cat( (re_imgs, imgs), 0)
-        re_labs = torch.cat( (re_labs, labs), 0)
-
-
-    return re_imgs, re_labs
-
 
 def img2patches_files_multi_pytorch(fs_im, fs_lb, fs_mk, radius_in, radius_out):
 
@@ -579,6 +376,11 @@ def img2patches_files_multi_pytorch(fs_im, fs_lb, fs_mk, radius_in, radius_out):
     im = imageio.imread(fs_im[0])
     lb = imageio.imread(fs_lb[0])
     mk = imageio.imread(fs_mk[0])
+    if len(mk.shape)==3:
+        mk = mk[:,:,0]
+    if len(lb.shape)==3:
+        lb = lb[:,:,0]
+
     mk = mask_extend(mk, 5)
 
     # first radius size
@@ -602,6 +404,10 @@ def img2patches_files_multi_pytorch(fs_im, fs_lb, fs_mk, radius_in, radius_out):
         im = imageio.imread(fs_im[i])
         lb = imageio.imread(fs_lb[i])
         mk = imageio.imread(fs_mk[i])
+        if len(mk.shape)==3:
+            mk = mk[:,:,0]
+        if len(lb.shape)==3:
+            lb = lb[:,:,0]
         mk = mask_extend(mk, 5)
 
         # first radius size
@@ -627,41 +433,6 @@ def img2patches_files_multi_pytorch(fs_im, fs_lb, fs_mk, radius_in, radius_out):
 
 
 
-def img2patches_files(fs_im, fs_lb, fs_mk, radius):
-
-    im = imageio.imread(fs_im[0])
-    lb = imageio.imread(fs_lb[0])
-    mk = imageio.imread(fs_mk[0])
-    mk = mask_extend(mk, 5)
-
-    adv_im = np.pad(im, ((radius, radius), (radius, radius), (0,0)), 'edge')
-    adv_lb = np.pad(lb, ((radius, radius), (radius, radius)), 'edge')
-    adv_mk = np.pad(mk, ((radius, radius), (radius, radius)), 'edge')
-
-
-    re_imgs, re_labs = img2patches_fast(adv_im, adv_lb, radius, adv_mk)
-
-
-    for i in range(1, len(fs_im)):
-        im = imageio.imread(fs_im[i])
-        lb = imageio.imread(fs_lb[i])
-        mk = imageio.imread(fs_mk[i])
-        mk = mask_extend(mk, 5)
-
-        adv_im = np.pad(im, ((radius, radius), (radius, radius), (0,0)), 'edge')
-        adv_lb = np.pad(lb, ((radius, radius), (radius, radius)), 'edge')
-        adv_mk = np.pad(mk, ((radius, radius), (radius, radius)), 'edge')
-
-
-        imgs, labs = img2patches_fast(adv_im, adv_lb, radius, adv_mk)
-
-        re_imgs = np.concatenate((re_imgs, imgs), axis=0)
-        re_labs = np.concatenate((re_labs, labs), axis=0)
-
-    return re_imgs, re_labs
-
-
-#def ConvertToBox(data, )
 
 
 
@@ -839,32 +610,7 @@ def randn_permutate(data):
 
 
 
-def randn_permutate_pytorch(data, device):
 
-    data = data.transpose(0, 2 ,3, 1)
-
-    nums, row, column, byte = data.shape
-
-
-
-    with torch.no_grad():
-#        torch.cuda.clear_memory_allocated()
-#        data = torch.tensor(data).to(device)
-        data = torch.tensor(data)
-
-        for i in range(nums):
-            block = data[i, :, :, :]
-            block = block.view( ( row*column, byte) )
-            indices = torch.randperm(row*column)
-            block = block[indices, :]
-
-            data[i, :, :, :] = block.view( (row, column, byte) )
-
-
-    data = data.cpu().detach().numpy()
-    data = data.transpose(0, 3, 1, 2)
-
-    return data
 
 
 def rand_permutate_plus(data, shuffledInd):
@@ -1009,8 +755,6 @@ def evaluation_labs(prelabs, trulabs):
 
 
 def mask_extend(mask, radius):
-    
-    mask = mask[:,:,0]
     row, column = mask.shape
 
     re_mask = mask - mask
@@ -1080,15 +824,6 @@ def main():
     fs_mk, fullfs_mk = loadFiles_plus(path_mk)
 
 
-#    fullfs_im = fullfs_im[13:18]
-#    fullfs_lb = fullfs_lb[13:18]
-#    fullfs_mk = fullfs_mk[13:18]
-
-
-#     im = imageio.imread(fullfs_im[0])
-#     lb = imageio.imread(fullfs_lb[0])
-#     mk = imageio.imread(fullfs_mk[0])
-#     mk = mask_extend(mk, 5)
 
 
     index = np.random.permutation(len(fullfs_im)).astype(int)
@@ -1202,7 +937,7 @@ def main():
     print("starting evaluation ---------------------------------------------------------------")
     path_im = '../data/test/images'
     path_lb = '../data/test/labels'
-    path_mk = '../data/test/mask'
+    path_mk = '../data/test/masks'
 
 
     net_pa = '../'
@@ -1214,11 +949,6 @@ def main():
 
 
 
-
-#     im = imageio.imread(fullfs_im[0])
-#     lb = imageio.imread(fullfs_lb[0])
-#     mk = imageio.imread(fullfs_mk[0])
-#     mk = mask_extend(mk, 5)
 
 
     radius_in  = 5
@@ -1243,6 +973,11 @@ def main():
         im = imageio.imread(fullfs_im[i])
         lb = imageio.imread(fullfs_lb[i])
         mk = imageio.imread(fullfs_mk[i])
+        if len(mk.shape)==3:
+            mk = mk[:,:,0]
+        if len(lb.shape)==3:
+            lb = lb[:,:,0]
+        
         mk = mask_extend(mk, 5)
 
         print('Loadinging test image', i+1)
