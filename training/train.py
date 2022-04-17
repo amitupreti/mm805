@@ -2,6 +2,7 @@
 import argparse
 
 import os
+from socket import IP_TOS
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -28,7 +29,7 @@ g_boxsizes = np.array( [ (2*r+1)**2   for r in g_radiussizes] )
 g_boxsizes[0] = 0
 
 # global variable for cude number 
-g_cuda = "cuda:8" 
+g_cuda = "cuda:0" 
 
 def loadFiles_plus(path_im, keyword = ""):
     re_fs = []
@@ -408,8 +409,11 @@ def img2patches_in_out(img, lab, msk, radius_in, radius_out):
 
     img = torch.tensor(img, dtype=torch.float)
     lab = torch.tensor(lab, dtype=torch.float)
+
+    lab = lab[:,:,0]
     msk = torch.tensor(msk, dtype=torch.float)
 
+    
     row_img_src, column_img_src, byte_img_src = img.shape
 
     img = F.pad(img, ((0, 0, radius_out, radius_out, radius_out, radius_out) ), 'constant')
@@ -463,6 +467,7 @@ def img2patches_in_out(img, lab, msk, radius_in, radius_out):
 
 
                 re_imgs[count, :, :, :] = patch_sub
+                
                 re_labs[count] = patch_lab
 
                 count = count + 1
@@ -1004,6 +1009,8 @@ def evaluation_labs(prelabs, trulabs):
 
 
 def mask_extend(mask, radius):
+    
+    mask = mask[:,:,0]
     row, column = mask.shape
 
     re_mask = mask - mask
@@ -1058,7 +1065,7 @@ def main():
 
     path_im = '../data/training/images'
     path_lb = '../data/training/labels'
-    path_mk = '../data/training/mask'
+    path_mk = '../data/training/masks'
 
 
     net_pa = '../'
